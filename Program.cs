@@ -1,6 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using learning_asp_core.Data;
+using learning_asp_core.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<ApiContext>(
+    opt => opt.UseInMemoryDatabase("OrderWorkflowDb")
+);
+
+builder.Services.AddSingleton<WorkflowService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
