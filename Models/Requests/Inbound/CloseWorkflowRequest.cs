@@ -1,4 +1,4 @@
-﻿namespace learning_asp_core.Models.Requests
+﻿namespace learning_asp_core.Models.Requests.Inbound
 {
     public class CloseWorkflowRequest
     {
@@ -8,7 +8,8 @@
 
         public Customer Customer { get; set; }
 
-        public CloseWorkflowRequest() {
+        public CloseWorkflowRequest()
+        {
             Order = new Order();
             Customer = new Customer();
         }

@@ -1,5 +1,5 @@
 ﻿using learning_asp_core.Controllers;
-using learning_asp_core.Models.Requests;
+using learning_asp_core.Models.Requests.Inbound;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
