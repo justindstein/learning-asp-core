@@ -7,5 +7,10 @@
         public OpenWorkflowRequest() {
             Order = new Order();
         }
+
+        public override string? ToString()
+        {
+            return base.ToString();
+        }
     }
 }

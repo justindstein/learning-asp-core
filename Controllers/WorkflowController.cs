@@ -1,7 +1,6 @@
 ﻿using learning_asp_core.Models.Requests;
 using learning_asp_core.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace learning_asp_core.Controllers
 {
@@ -9,7 +8,7 @@ namespace learning_asp_core.Controllers
     [ApiController]
     public class WorkflowController : ControllerBase
     {
-        ILogger<WorkflowController> _logger;
+        private readonly ILogger<WorkflowController> _logger;
 
         private readonly WorkflowService _workflowService;
 
@@ -24,8 +23,20 @@ namespace learning_asp_core.Controllers
         {
             _logger.LogInformation("Opening workflow with parameters: {@OpenWorkflowRequest}", openWorkflowRequest);
 
-            _workflowService.OpenWorkflow(openWorkflowRequest);
-            return new JsonResult(Ok());
+            try 
+            {
+                // write to db
+                // organize requests
+                // issue requests
+                // respond with epic link maybe
+
+                _workflowService.OpenWorkflow(openWorkflowRequest);
+                return new JsonResult(Ok());
+
+            } catch(Exception e)
+            {
+                return new JsonResult(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPost("close")]
@@ -33,28 +44,20 @@ namespace learning_asp_core.Controllers
         {
             _logger.LogInformation("Closing workflow with parameters: {@CloseWorkflowRequest}", closeWorkflowRequest);
 
-            _workflowService.CloseWorkflow(closeWorkflowRequest);
-            return new JsonResult(Ok());
+            try
+            {
+                // if order, verify all suborders are closed?
+                // update db
+                // notify callback url
+
+                _workflowService.CloseWorkflow(closeWorkflowRequest);
+                return new JsonResult(Ok());
+
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(StatusCodes.Status500InternalServerError);
+            }
         }
-
-        //public JsonResult CreateStartOrderWorkflowRequest(StartOrderWorkflowRequest startOrderWorkflowRequest)
-        //{
-        //if(startOrderWorkflowRequest.Order.OrderId == 0)
-        //{
-        //    _context.StartOrderWorkflowRequests.Add(startOrderWorkflowRequest);
-        //} else
-        //{
-        //    var bookingInDb = _context.StartOrderWorkflowRequests.Find(startOrderWorkflowRequest.Order.OrderId);
-        //    if (bookingInDb == null)
-        //    {
-        //     return new JsonResult(NotFound());   
-        //    }
-
-        //    bookingInDb = startOrderWorkflowRequest;
-        //}
-
-        //_context.SaveChanges();
-        //return new JsonResult(Ok(startOrderWorkflowRequest));
-        //}
     }
 }
