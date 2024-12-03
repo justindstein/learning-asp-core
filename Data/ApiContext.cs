@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using learning_asp_core.Models.Requests;
+using learning_asp_core.Models.Requests.Inbound;
 
 
 namespace learning_asp_core.Data

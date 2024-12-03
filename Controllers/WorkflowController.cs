@@ -1,4 +1,4 @@
-﻿using learning_asp_core.Models.Requests;
+﻿using learning_asp_core.Models.Requests.Inbound;
 using learning_asp_core.Services;
 using Microsoft.AspNetCore.Mvc;
 
