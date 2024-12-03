@@ -1,15 +1,21 @@
-﻿namespace learning_asp_core.Services
+﻿using learning_asp_core.Models.Requests;
+
+namespace learning_asp_core.Services
 {
     public class WorkflowService
     {
-        public string GetOrderDetails()
+        public void OpenWorkflow(OpenWorkflowRequest openWorkflowRequest)
         {
-            return "Order details fetched successfully!";
+            // convert OpenWorkflowRequest to API request object for azure devops
+            // send message to devops
         }
 
-        public OpenWorkflowRequest GetOrderDetails()
+        public void CloseWorkflow(CloseWorkflowRequest closeWorkflowRequest)
         {
-            return "Order details fetched successfully!";
+            // convert closeWorkflowRequest to object that needs to be run against db
+            // update db
+            // message ASP
+
         }
     }
 }

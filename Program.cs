@@ -1,18 +1,23 @@
 using Microsoft.EntityFrameworkCore;
 using learning_asp_core.Data;
 using learning_asp_core.Services;
+using learning_asp_core.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configure database.
 builder.Services.AddDbContext<ApiContext>(
     opt => opt.UseInMemoryDatabase("OrderWorkflowDb")
 );
 
+// Register HttpClient with retry policy using extension method
+builder.Services.AddHttpClient("retryClient")
+    .AddPolicyHandler(HttpClientConfig.GetRetryPolicy());
+
+// Add services to the container.
 builder.Services.AddSingleton<WorkflowService>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

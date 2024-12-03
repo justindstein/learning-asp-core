@@ -6,6 +6,9 @@
 
         public HashSet<OrderEntry> OrderEntries;
 
-        public SubOrder() { }
+        public SubOrder() {
+            Decorations = new HashSet<Decoration>();
+            OrderEntries = new HashSet<OrderEntry>();
+        }
     }
 }

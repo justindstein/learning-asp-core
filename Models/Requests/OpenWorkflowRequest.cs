@@ -1,8 +1,11 @@
 ﻿namespace learning_asp_core.Models.Requests
 {
-    public class EndOrderWorkflowRequest
+    public class OpenWorkflowRequest
     {
+        public Order Order { get; set; }
 
-        public EndOrderWorkflowRequest() { }
+        public OpenWorkflowRequest() {
+            Order = new Order();
+        }
     }
 }

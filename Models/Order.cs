@@ -18,6 +18,8 @@ namespace learning_asp_core.Models
 
         public HashSet<SubOrder> SubOrders { get; set; }
 
-        public Order() { }
+        public Order() {
+            SubOrders = new HashSet<SubOrder>();
+        }
     }
 }
