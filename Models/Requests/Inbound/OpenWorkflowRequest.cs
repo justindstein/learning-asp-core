@@ -15,24 +15,18 @@ namespace learning_asp_core.Models.Requests.Inbound
 
         public CreateOrderWorkItemRequest toCreateOrderWorkItemRequest()
         {
-            // Usage
-            DecorTech decorTech = DecorTech.THREE_D_BOUNCE_RAISED_EMBROIDERY;
-            string description = decorTech.GetDescription();
-            Console.WriteLine(description); // Outputs: "3D/Bounce (Raised Embroidery)"
-
-
-
-
-
-
-
-            return new CreateOrderWorkItemRequest(Customer.CustomerName, Order.OrderId, "some description", Order.Priority, string submitDate, string productionDate, string bssDate, string orderRef);
+            return new CreateOrderWorkItemRequest(Customer.CustomerName, Order.OrderId, "some description", Order.Priority, Order.SubmitDate, Order.ProductionDate, Order.BestStartShipDate, Order.OrderRef);
         }
 
         public HashSet<CreateSuborderWorkItemRequest> toCreateSuborderWorkItemRequests()
         {
-            CreateSuborderWorkItemRequest foo = new CreateSuborderWorkItemRequest();
-            return null;
+            HashSet<CreateSuborderWorkItemRequest> createSuborderWorkItemRequests = new HashSet<CreateSuborderWorkItemRequest>();
+            foreach (SubOrder s in Order.SubOrders)
+            {
+                createSuborderWorkItemRequests.Add(new CreateSuborderWorkItemRequest());
+            }
+
+            return createSuborderWorkItemRequests;
         }
     }
 }

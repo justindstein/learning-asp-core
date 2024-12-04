@@ -6,7 +6,7 @@ namespace learning_asp_core.Models
     {
         public int OrderId { get; set; }
 
-        public string? OrderRef {  get; set; }
+        public string OrderRef {  get; set; }
 
         public DateTime SubmitDate { get; set; }
 
