@@ -6,7 +6,7 @@ namespace learning_asp_core.Models.Requests.Outbound
     public class CreateOrderWorkItemRequest
     {
         private readonly string _customerName;
-        private readonly int _orderNumber;
+        private readonly string _orderId;
         private readonly string _description;
         private readonly PriorityType _priority;
         private readonly DateTime _submitDate;
@@ -14,10 +14,10 @@ namespace learning_asp_core.Models.Requests.Outbound
         private readonly DateTime _bssDate;
         private readonly string _orderRef;
 
-        public CreateOrderWorkItemRequest(string customerName, int orderNumber, string description, PriorityType priority, DateTime submitDate, DateTime productionDate, DateTime bssDate, string orderRef)
+        public CreateOrderWorkItemRequest(string customerName, string orderId, string description, PriorityType priority, DateTime submitDate, DateTime productionDate, DateTime bssDate, string orderRef)
         {
             _customerName = customerName;
-            _orderNumber = orderNumber;
+            _orderId = orderId;
             _description = description;
             _priority = priority;
             _submitDate = submitDate;
@@ -26,11 +26,11 @@ namespace learning_asp_core.Models.Requests.Outbound
             _orderRef = orderRef;
         }
 
-        public string toRequestBody()
+        public string ToRequestBody()
         {
             return $@"
             [
-                {{'op':'add','path':'/fields/System.Title','value':'{_customerName} - {_orderNumber}'}},
+                {{'op':'add','path':'/fields/System.Title','value':'{_customerName} - {_orderId}'}},
                 {{'op':'add','path':'/fields/System.Description','value':'{_description}'}},
                 {{'op':'add','path':'/fields/Custom.Customer','value':'{_customerName}'}},
                 {{'op':'add','path':'/fields/Custom.WorkPriority','value':'{_priority.GetDescription()}'}},

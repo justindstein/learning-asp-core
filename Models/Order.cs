@@ -4,7 +4,7 @@ namespace learning_asp_core.Models
 {
     public class Order
     {
-        public int OrderId { get; set; }
+        public string OrderId { get; set; }
 
         public string OrderRef {  get; set; }
 
