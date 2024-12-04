@@ -18,12 +18,12 @@ namespace learning_asp_core.Models.Requests.Inbound
             return new CreateOrderWorkItemRequest(Customer.CustomerName, Order.OrderId, "some description", Order.Priority, Order.SubmitDate, Order.ProductionDate, Order.BestStartShipDate, Order.OrderRef);
         }
 
-        public HashSet<CreateSuborderWorkItemRequest> toCreateSuborderWorkItemRequests()
+        public HashSet<CreateSuborderWorkItemRequest> toCreateSuborderWorkItemRequests(string parentRef)
         {
             HashSet<CreateSuborderWorkItemRequest> createSuborderWorkItemRequests = new HashSet<CreateSuborderWorkItemRequest>();
             foreach (SubOrder s in Order.SubOrders)
             {
-                createSuborderWorkItemRequests.Add(new CreateSuborderWorkItemRequest());
+                createSuborderWorkItemRequests.Add(new CreateSuborderWorkItemRequest(Customer.CustomerName, Order.OrderId, parentRef)); //string customerName, string orderNumber, string parentRef
             }
 
             return createSuborderWorkItemRequests;
