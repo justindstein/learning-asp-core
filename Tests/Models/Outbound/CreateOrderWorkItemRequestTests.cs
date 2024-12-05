@@ -71,5 +71,12 @@ namespace learning_asp_core.Tests.Models.Outbound
                 }
             }
         }
+
+
+        [Fact]
+        public void Test3_dbconection()
+        {
+            Console.WriteLine("");
+        }
     }
 }

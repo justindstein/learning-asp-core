@@ -1,4 +1,5 @@
 ﻿using learning_asp_core.Controllers;
+using learning_asp_core.Data;
 using learning_asp_core.Models.Requests.Inbound;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -25,6 +26,8 @@ namespace learning_asp_core.Services
 
         public async void OpenWorkflow(OpenWorkflowRequest openWorkflowRequest)
         {
+            _appDbContext.Workflows.Add(new Models.Entity.Workflow(3, "codeTest", new DateTime()));
+
             // convert OpenWorkflowRequest to API request object for azure devops
             // send message to devops
 
