@@ -8,24 +8,20 @@ namespace learning_asp_core.Models.Requests.Inbound
 
         public Customer Customer { get; set; }
 
-        public OpenWorkflowRequest()
-        {
-            Order = new Order();
-        }
+        public OpenWorkflowRequest() { }
 
-        public CreateOrderWorkItemRequest toCreateOrderWorkItemRequest()
+        public CreateOrderWorkItemRequest ToCreateOrderWorkItemRequest()
         {
             return new CreateOrderWorkItemRequest(Customer.CustomerName, Order.OrderId, "some description", Order.Priority, Order.SubmitDate, Order.ProductionDate, Order.BestStartShipDate, Order.OrderRef);
         }
 
-        public HashSet<CreateSuborderWorkItemRequest> toCreateSuborderWorkItemRequests(string parentRef)
+        public HashSet<CreateSuborderWorkItemRequest> ToCreateSuborderWorkItemRequests(string parentRef)
         {
             HashSet<CreateSuborderWorkItemRequest> createSuborderWorkItemRequests = new HashSet<CreateSuborderWorkItemRequest>();
             foreach (SubOrder s in Order.SubOrders)
             {
                 createSuborderWorkItemRequests.Add(new CreateSuborderWorkItemRequest(Customer.CustomerName, Order.OrderId, parentRef)); //string customerName, string orderNumber, string parentRef
             }
-
             return createSuborderWorkItemRequests;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using learning_asp_core.Models.Enums;
 using learning_asp_core.Models.Requests.Outbound;
 using learning_asp_core.Utils;
+using System.Data.SqlClient;
 using Xunit;
 
 namespace learning_asp_core.Tests.Models.Outbound
@@ -37,6 +38,38 @@ namespace learning_asp_core.Tests.Models.Outbound
 
             // Assert
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Test2_dbconection()
+        {
+
+            string connectionString = "Server=localhost\\MSSQLLocalDB;Database=aws;Trusted_Connection=True;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    Console.WriteLine("Connection successful!");
+
+                    // Example query
+                    string query = "SELECT * FROM workflow";
+                    SqlCommand command = new SqlCommand(query, connection);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Console.WriteLine($"ID: {reader["Id"]}, Name: {reader["Name"]}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                }
+            }
         }
     }
 }

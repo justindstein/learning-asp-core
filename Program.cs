@@ -14,6 +14,12 @@ builder.Services.AddDbContext<ApiContext>(
 builder.Services.AddHttpClient("retryClient")
     .AddPolicyHandler(HttpClientConfig.GetRetryPolicy());
 
+// Add Db Context
+builder.Services.AddDbContext<AwsContext>(options =>
+{
+    options.UseSqlServer("Server=localhost;Database=aws;User Id=sa;Password=Ahead123!;Trusted_Connection=True;");
+});
+
 // Add services to the container.
 builder.Services.AddSingleton<WorkflowService>();
 
