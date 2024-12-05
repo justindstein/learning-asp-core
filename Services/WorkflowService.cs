@@ -1,6 +1,7 @@
 ﻿using learning_asp_core.Controllers;
 using learning_asp_core.Data;
 using learning_asp_core.Models.Requests.Inbound;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,26 +15,34 @@ namespace learning_asp_core.Services
         private readonly ILogger<WorkflowController> _logger;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        private readonly AppDbContext _appDbContext;
 
         private readonly string? createOrderUrl = "https://dev.azure.com/{organization}/{project}/_apis/wit/workitems/$Order?api-version={api-version}&$expand=all";
 
-        public WorkflowService(ILogger<WorkflowController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public WorkflowService(ILogger<WorkflowController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration, AppDbContext appDbContext)
         {
             _logger = logger;
             _httpClient = httpClientFactory.CreateClient("retryClient");
             _configuration = configuration;
+            _appDbContext = appDbContext;
         }
 
         public async void OpenWorkflow(OpenWorkflowRequest openWorkflowRequest)
         {
-            // convert OpenWorkflowRequest to API request object for azure devops
-            // send message to devops
+            var workflows = _appDbContext.Workflows.ToList();
+            foreach (var workflow in workflows) 
+            {
+                _logger.LogInformation(workflow.Name); 
+            }
 
-            HttpResponseMessage response = await _httpClient.GetAsync("https://jsonplaceholder.typicode.com/users");
+           // convert OpenWorkflowRequest to API request object for azure devops
+           // send message to devops
+
+           HttpResponseMessage response = await _httpClient.GetAsync("https://jsonplaceholder.typicode.com/users");
             response.EnsureSuccessStatusCode();
 
             string responseBody = await response.Content.ReadAsStringAsync();
-            _logger.LogInformation("Status Code: {StatusCode} Response Body: {ResponseBody}", response.StatusCode, responseBody); 
+            //_logger.LogInformation("Status Code: {StatusCode} Response Body: {ResponseBody}", response.StatusCode, responseBody); 
         }
 
         public async void CloseWorkflow(CloseWorkflowRequest closeWorkflowRequest)

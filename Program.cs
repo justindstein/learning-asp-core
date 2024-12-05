@@ -1,3 +1,4 @@
+using learning_asp_core.Data;
 using learning_asp_core.Services;
 using learning_asp_core.Utils;
 
@@ -11,8 +12,9 @@ builder.Services.AddHttpClient("retryClient")
     .AddPolicyHandler(HttpClientConfig.GetRetryPolicy());
 
 // Add services to the container.
-builder.Services.AddSingleton<WorkflowService>();
 // builder.Services.AddScoped<WorkflowService>();
+builder.Services.AddScoped<WorkflowService>();
+builder.Services.AddScoped<AppDbContext>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
