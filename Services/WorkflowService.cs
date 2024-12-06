@@ -12,15 +12,17 @@ namespace learning_asp_core.Services
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
         private readonly AppDbContext _appDbContext;
+        private readonly AzureService _azureService;
 
         private readonly string? createOrderUrl = "https://dev.azure.com/{organization}/{project}/_apis/wit/workitems/$Order?api-version={api-version}&$expand=all";
 
-        public WorkflowService(ILogger<WorkflowController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration, AppDbContext appDbContext)
+        public WorkflowService(ILogger<WorkflowController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration, AppDbContext appDbContext, AzureService azureService)
         {
             _logger = logger;
             _httpClient = httpClientFactory.CreateClient("retryClient");
             _configuration = configuration;
             _appDbContext = appDbContext;
+            _azureService = azureService;
 
             // Retrieve credentials from configuration
             string? username = _configuration["Azure:Username"];
@@ -35,8 +37,16 @@ namespace learning_asp_core.Services
 
         public async void OpenWorkflow(OpenWorkflowRequest openWorkflowRequest)
         {
-            string parentUrl = createOrder(openWorkflowRequest);
-            createSubOrders(openWorkflowRequest, parentUrl);
+            string parentRef = _azureService.CreateOrder(openWorkflowRequest.ToCreateOrderWorkItemRequest());
+
+
+            foreach (CreateSuborderWorkItemRequest createSuborderWorkItemRequest in openWorkflowRequest.ToCreateSuborderWorkItemRequests(parentRef))
+            {
+                _azureService.CreateSubOrder(createSuborderWorkItemRequest);
+            }
+
+            //string parentUrl = createOrder(openWorkflowRequest);
+            //createSubOrders(openWorkflowRequest, parentUrl);
         }
 
         private string createOrder(OpenWorkflowRequest openWorkflowRequest)

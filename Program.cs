@@ -15,6 +15,7 @@ builder.Services.AddHttpClient("retryClient")
 // builder.Services.AddScoped<WorkflowService>();
 builder.Services.AddScoped<WorkflowService>();
 builder.Services.AddScoped<AppDbContext>();
+builder.Services.AddScoped<AzureService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
