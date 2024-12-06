@@ -20,7 +20,7 @@ namespace learning_asp_core.Models.Requests.Inbound
             HashSet<CreateSuborderWorkItemRequest> createSuborderWorkItemRequests = new HashSet<CreateSuborderWorkItemRequest>();
             foreach (SubOrder s in Order.SubOrders)
             {
-                createSuborderWorkItemRequests.Add(new CreateSuborderWorkItemRequest(Customer.CustomerName, Order.OrderId, parentRef)); //string customerName, string orderNumber, string parentRef
+                createSuborderWorkItemRequests.Add(new CreateSuborderWorkItemRequest(Customer.CustomerName, Order.OrderId, parentRef));
             }
             return createSuborderWorkItemRequests;
         }

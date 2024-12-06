@@ -1,6 +1,7 @@
 ﻿using learning_asp_core.Controllers;
 using learning_asp_core.Data;
 using learning_asp_core.Models.Requests.Inbound;
+using learning_asp_core.Models.Requests.Outbound;
 using System.Text;
 
 namespace learning_asp_core.Services
@@ -34,6 +35,12 @@ namespace learning_asp_core.Services
 
         public async void OpenWorkflow(OpenWorkflowRequest openWorkflowRequest)
         {
+            //createOrder(openWorkflowRequest);
+            createSubOrders(openWorkflowRequest, "https://dev.azure.com/aheadapparel/8befd588-792c-48fc-94bc-bbc12c86c409/_apis/wit/workItems/70");
+        }
+
+        private async void createOrder(OpenWorkflowRequest openWorkflowRequest)
+        {
             // Convert the request object to JSON
             //string requestBody = System.Text.Json.JsonSerializer.Serialize(openWorkflowRequest);
             string requestBody = openWorkflowRequest.ToCreateOrderWorkItemRequest().ToRequestBody();
@@ -44,11 +51,26 @@ namespace learning_asp_core.Services
 
             // convert OpenWorkflowRequest to API request object for azure devops
             // send message to devops
-            HttpResponseMessage response = await _httpClient.PostAsync("https://dev.azure.com/aheadapparel/order-workflow/_apis/wit/workitems/$Order?api-version=7.1&$expand=all", content);
+            HttpResponseMessage response = await _httpClient.PostAsync("https://dev.azure.com/aheadapparel/order-workflow/_apis/wit/workitems/$Order?api-version=7.1", content);
             // response.EnsureSuccessStatusCode();
 
             string responseBody = await response.Content.ReadAsStringAsync();
-            _logger.LogInformation("Status Code: {StatusCode} Response Body: {ResponseBody}", response.StatusCode, responseBody); 
+            _logger.LogInformation("Status Code: {StatusCode} Response Body: {ResponseBody}", response.StatusCode, responseBody);
+        }
+
+        private async void createSubOrders(OpenWorkflowRequest openWorkflowRequest, string parentRef)
+        {
+            foreach(CreateSuborderWorkItemRequest createSuborderWorkItemRequest in openWorkflowRequest.ToCreateSuborderWorkItemRequests(parentRef))
+            {
+                string requestBody = createSuborderWorkItemRequest.ToRequestBody();
+                _logger.LogInformation("requestBody: " + requestBody);
+
+                HttpContent content = new StringContent(requestBody, Encoding.UTF8, "application/json-patch+json");
+                HttpResponseMessage response = await _httpClient.PostAsync("https://dev.azure.com/aheadapparel/order-workflow/_apis/wit/workitems/$Suborder?api-version=7.1", content);
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation("Status Code: {StatusCode} Response Body: {ResponseBody}", response.StatusCode, responseBody);
+            }
         }
 
         public async void CloseWorkflow(CloseWorkflowRequest closeWorkflowRequest)
