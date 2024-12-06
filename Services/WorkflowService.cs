@@ -35,11 +35,11 @@ namespace learning_asp_core.Services
 
         public async void OpenWorkflow(OpenWorkflowRequest openWorkflowRequest)
         {
-            //createOrder(openWorkflowRequest);
-            createSubOrders(openWorkflowRequest, "https://dev.azure.com/aheadapparel/8befd588-792c-48fc-94bc-bbc12c86c409/_apis/wit/workItems/70");
+            string parentUrl = createOrder(openWorkflowRequest);
+            createSubOrders(openWorkflowRequest, parentUrl);
         }
 
-        private async void createOrder(OpenWorkflowRequest openWorkflowRequest)
+        private string createOrder(OpenWorkflowRequest openWorkflowRequest)
         {
             // Convert the request object to JSON
             //string requestBody = System.Text.Json.JsonSerializer.Serialize(openWorkflowRequest);
@@ -51,11 +51,15 @@ namespace learning_asp_core.Services
 
             // convert OpenWorkflowRequest to API request object for azure devops
             // send message to devops
-            HttpResponseMessage response = await _httpClient.PostAsync("https://dev.azure.com/aheadapparel/order-workflow/_apis/wit/workitems/$Order?api-version=7.1", content);
-            // response.EnsureSuccessStatusCode();
+            HttpResponseMessage response = _httpClient.PostAsync("https://dev.azure.com/aheadapparel/order-workflow/_apis/wit/workitems/$Order?api-version=7.1", content)
+                .GetAwaiter()
+                .GetResult();
 
-            string responseBody = await response.Content.ReadAsStringAsync();
-            _logger.LogInformation("Status Code: {StatusCode} Response Body: {ResponseBody}", response.StatusCode, responseBody);
+            string responseBody = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            Models.Responses.CreateWorkflowResponse createWorkflowResponse = System.Text.Json.JsonSerializer.Deserialize<Models.Responses.CreateWorkflowResponse>(responseBody, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            _logger.LogInformation("Status Code: {StatusCode} Url: {Url} Response Body: {ResponseBody}", response.StatusCode, createWorkflowResponse.Url, responseBody);
+
+            return createWorkflowResponse.Url;
         }
 
         private async void createSubOrders(OpenWorkflowRequest openWorkflowRequest, string parentRef)
