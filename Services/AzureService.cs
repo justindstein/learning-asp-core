@@ -2,6 +2,7 @@
 using learning_asp_core.Data;
 using learning_asp_core.Models.Requests.Inbound;
 using learning_asp_core.Models.Requests.Outbound;
+using learning_asp_core.Models.Responses;
 using System.Text;
 
 namespace learning_asp_core.Services
@@ -31,7 +32,7 @@ namespace learning_asp_core.Services
                 .Replace("{apiVersion}", configuration["Microsoft:Azure:Api.Version"]);
         }
 
-        public string CreateOrder(CreateOrderWorkItemRequest createOrderWorkItemRequest)
+        public CreateWorkflowResponse CreateOrder(CreateOrderWorkItemRequest createOrderWorkItemRequest)
         {
             HttpContent content = new StringContent(createOrderWorkItemRequest.ToRequestBody(), Encoding.UTF8, "application/json-patch+json");
             HttpResponseMessage response = _httpClient.PostAsync(_url.Replace("{workItem}", "$Order"), content)
@@ -42,16 +43,22 @@ namespace learning_asp_core.Services
             Models.Responses.CreateWorkflowResponse createWorkflowResponse = System.Text.Json.JsonSerializer.Deserialize<Models.Responses.CreateWorkflowResponse>(responseBody, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             _logger.LogInformation("Status Code: {StatusCode} Url: {Url} Response Body: {ResponseBody}", response.StatusCode, createWorkflowResponse.Url, responseBody);
 
-            return createWorkflowResponse.Url;
+            //return createWorkflowResponse.Url;
+            return createWorkflowResponse;
         }
 
-        public async void CreateSubOrder(CreateSuborderWorkItemRequest createSuborderWorkItemRequest)
+        public CreateWorkflowResponse CreateSuborder(CreateSuborderWorkItemRequest createSuborderWorkItemRequest)
         {
             HttpContent content = new StringContent(createSuborderWorkItemRequest.ToRequestBody(), Encoding.UTF8, "application/json-patch+json");
-            HttpResponseMessage response = await _httpClient.PostAsync(_url.Replace("{workItem}", "$Suborder"), content);
+            HttpResponseMessage response = _httpClient.PostAsync(_url.Replace("{workItem}", "$Suborder"), content)
+                .GetAwaiter()
+                .GetResult();
 
-            string responseBody = await response.Content.ReadAsStringAsync();
-            _logger.LogInformation("Status Code: {StatusCode} Response Body: {ResponseBody}", response.StatusCode, responseBody);
+            string responseBody = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            Models.Responses.CreateWorkflowResponse createWorkflowResponse = System.Text.Json.JsonSerializer.Deserialize<Models.Responses.CreateWorkflowResponse>(responseBody, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            _logger.LogInformation("Status Code: {StatusCode} Url: {Url} Response Body: {ResponseBody}", response.StatusCode, createWorkflowResponse.Url, responseBody);
+
+            return createWorkflowResponse;
         }
 
         public async void CloseWorkflow(CloseWorkflowRequest closeWorkflowRequest)

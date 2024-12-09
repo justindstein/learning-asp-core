@@ -11,6 +11,8 @@ namespace learning_asp_core.Models.Entity
         public bool IsClosed { get; set; }
         public string Data { get; set; }
 
+        public Workflow() { }
+
         public Workflow(string workItemType, HashSet<string> data)
         {
             WorkItemType = workItemType;
