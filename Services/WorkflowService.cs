@@ -4,9 +4,6 @@ using learning_asp_core.Models.Entity;
 using learning_asp_core.Models.Requests.Inbound;
 using learning_asp_core.Models.Requests.Outbound;
 using learning_asp_core.Models.Responses;
-using Microsoft.EntityFrameworkCore;
-using Polly;
-using System.Text;
 
 namespace learning_asp_core.Services
 {
@@ -30,7 +27,7 @@ namespace learning_asp_core.Services
         public async void OpenWorkflow(OpenWorkflowRequest openWorkflowRequest)
         {
             Workflow workflow = new Workflow("Order", new HashSet<string> { "OrderId: 1001", "CustomerName: John Doe", "Priority: Event", "SubmitDate: 1/1/2024" });
-            insertWorkflow(workflow);
+            workflow = insertWorkflow(workflow);
 
             CreateWorkflowResponse response = _azureService.CreateOrder(openWorkflowRequest.ToCreateOrderWorkItemRequest());
             workflow.Update(response.Id, response.Url);
@@ -39,7 +36,7 @@ namespace learning_asp_core.Services
             foreach (CreateSuborderWorkItemRequest createSuborderWorkItemRequest in openWorkflowRequest.ToCreateSuborderWorkItemRequests(response.Url))
             {
                 workflow = new Workflow("Suborder", new HashSet<string> { "OrderId: 2001", "CustomerName: Jane Doe", "Priority: Low", "SubmitDate: 1/1/2025" });
-                insertWorkflow(workflow);
+                workflow = insertWorkflow(workflow);
 
                 response = _azureService.CreateSuborder(createSuborderWorkItemRequest);
                 workflow.Update(response.Id, response.Url);
@@ -47,25 +44,26 @@ namespace learning_asp_core.Services
             }
         }
 
-        private void insertWorkflow(Workflow workflow)
+        private Workflow insertWorkflow(Workflow workflow)
         {
             _appDbContext.Workflows.Add(workflow);
             _appDbContext.SaveChanges();
-            Console.WriteLine("Record inserted.");
+            _logger.LogInformation("Record inserted: " + workflow.WorkflowID);
+            return workflow;
         }
 
         private void updateWorkflow(Workflow workflow)
         {
-            bool exists = _appDbContext.Workflows.Any(w => w.WorkItemID == workflow.WorkItemID);
+            bool exists = _appDbContext.Workflows.Any(w => w.WorkflowID == workflow.WorkflowID);
             if (exists)
             {
                 _appDbContext.Workflows.Update(workflow);
-                _appDbContext.SaveChangesAsync();
-                Console.WriteLine("Record updated.");
+                _appDbContext.SaveChanges();
+                _logger.LogInformation("Record updated " + workflow.WorkflowID);
             }
             else
             {
-                Console.WriteLine("Record does not exist.");
+                _logger.LogInformation("Record does not exist " + workflow.WorkflowID);
             }
         }
 
