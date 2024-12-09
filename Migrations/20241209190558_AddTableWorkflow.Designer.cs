@@ -11,7 +11,7 @@ using learning_asp_core.Data;
 namespace learning_asp_core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241209185105_AddTableWorkflow")]
+    [Migration("20241209190558_AddTableWorkflow")]
     partial class AddTableWorkflow
     {
         /// <inheritdoc />
