@@ -6,29 +6,25 @@ using System.Text;
 
 namespace learning_asp_core.Services
 {
-    public class AzureService
+    public class AheadService
     {
         private readonly ILogger<WorkflowController> _logger;
         private readonly HttpClient _httpClient;
 
         private readonly string _url;
 
-        public AzureService(ILogger<WorkflowController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public AheadService(ILogger<WorkflowController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _logger = logger;
             _httpClient = httpClientFactory.CreateClient("retryClient");
 
             // Retrieve credentials from configuration
-            string username = configuration["Microsoft:Azure:Username"];
-            string password = configuration["Microsoft:Azure:Password"];
+            string username = configuration["New.Wave.Group:Ahead:Username"];
+            string password = configuration["New.Wave.Group:Ahead:Password"];
             string credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", credentials);
 
-            // Extract values from the configuration
-            _url = configuration["Microsoft:Azure:Url"]
-                .Replace("{organization}", configuration["Microsoft:Azure:Organization"])
-                .Replace("{project}", configuration["Microsoft:Azure:Project"])
-                .Replace("{apiVersion}", configuration["Microsoft:Azure:Api.Version"]);
+            _url = configuration["New.Wave.Group:Ahead:Url"];
         }
 
         public string CreateOrder(CreateOrderWorkItemRequest createOrderWorkItemRequest)

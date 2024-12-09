@@ -4,7 +4,7 @@ using learning_asp_core.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure database.
+// Configucre database.
 // todo
 
 // Register HttpClient with retry policy using extension method
@@ -12,10 +12,11 @@ builder.Services.AddHttpClient("retryClient")
     .AddPolicyHandler(HttpClientConfig.GetRetryPolicy());
 
 // Add services to the container.
-// builder.Services.AddScoped<WorkflowService>();
-builder.Services.AddScoped<WorkflowService>();
 builder.Services.AddScoped<AppDbContext>();
+builder.Services.AddScoped<WorkflowService>();
 builder.Services.AddScoped<AzureService>();
+builder.Services.AddScoped<AheadService>();
+builder.Services.AddScoped<GoogleService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

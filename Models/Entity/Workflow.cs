@@ -1,18 +1,12 @@
 ﻿namespace learning_asp_core.Models.Entity
 {
-    public class Workflow
-    {
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public DateTime Bss { get; set; }
-
-        public Workflow(int id, string name, DateTime bss)
+        public class Workflow
         {
-            Id = id;
-            Name = name;
-            Bss = bss;
+            public int WorkflowID { get; set; }
+            public int WorkItemID { get; set; }
+            public string WorkItemUrl { get; set; }
+            public string WorkItemType { get; set; }
+            public bool IsClosed { get; set; }
+            public string Data { get; set; }
         }
-    }
 }
