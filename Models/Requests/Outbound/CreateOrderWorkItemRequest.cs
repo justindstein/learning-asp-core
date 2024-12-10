@@ -3,22 +3,17 @@ using learning_asp_core.Utils;
 
 namespace learning_asp_core.Models.Requests.Outbound
 {
-    public class CreateOrderWorkItemRequest
+    public class CreateOrderWorkItemRequest : CreateWorkItemRequest
     {
-        private readonly string _customerName;
-        private readonly string _orderId;
-        private readonly string _description;
         private readonly PriorityType _priority;
         private readonly DateTime _submitDate;
         private readonly DateTime _productionDate;
         private readonly DateTime _bssDate;
         private readonly string _orderRef;
 
-        public CreateOrderWorkItemRequest(string customerName, string orderId, string description, PriorityType priority, DateTime submitDate, DateTime productionDate, DateTime bssDate, string orderRef)
+        public CreateOrderWorkItemRequest(string customerName, string orderId, string description, PriorityType priority, DateTime submitDate, DateTime productionDate, DateTime bssDate, string orderRef) 
+            : base(customerName, orderId, description)
         {
-            _customerName = customerName;
-            _orderId = orderId;
-            _description = description;
             _priority = priority;
             _submitDate = submitDate;
             _productionDate = productionDate;
@@ -26,13 +21,13 @@ namespace learning_asp_core.Models.Requests.Outbound
             _orderRef = orderRef;
         }
 
-        public string ToRequestBody()
+        public override string ToRequestBody()
         {
             return $@"
             [
-                {{'op':'add','path':'/fields/System.Title','value':'{_customerName} - {_orderId}'}},
-                {{'op':'add','path':'/fields/System.Description','value':'{_description}'}},
-                {{'op':'add','path':'/fields/Custom.Customer','value':'{_customerName}'}},
+                {{'op':'add','path':'/fields/System.Title','value':'{base.CustomerName} - {base.OrderId}'}},
+                {{'op':'add','path':'/fields/System.Description','value':'{base.Description}'}},
+                {{'op':'add','path':'/fields/Custom.Customer','value':'{base.CustomerName}'}},
                 {{'op':'add','path':'/fields/Custom.WorkPriority','value':'{_priority.GetDescription()}'}},
                 {{'op':'add','path':'/fields/Custom.SubmitDate','value':'{_submitDate}'}},
                 {{'op':'add','path':'/fields/Custom.ProductionDate','value':'{_productionDate}'}},

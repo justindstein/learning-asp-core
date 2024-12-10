@@ -24,25 +24,37 @@ namespace learning_asp_core.Services
             _googleService = googleService;
         }
 
-        public async void OpenWorkflow(OpenWorkflowRequest openWorkflowRequest)
+        public void OpenWorkflow(OpenWorkflowRequest openWorkflowRequest)
         {
-            Workflow workflow = new Workflow("Order", new HashSet<string> { "OrderId: 1001", "CustomerName: John Doe", "Priority: Event", "SubmitDate: 1/1/2024" });
-            workflow = insertWorkflow(workflow);
+            (Workflow workflow, CreateWorkItemRequest createOrderWorkItemRequest) orderTuple = openWorkflowRequest.ToOrderTuple();
+            Workflow orderWorkflow = insertWorkflow(orderTuple.workflow);
 
-            CreateWorkflowResponse response = _azureService.CreateOrder(openWorkflowRequest.ToCreateOrderWorkItemRequest());
-            workflow.Update(response.Id, response.Url);
-            updateWorkflow(workflow);
+            CreateWorkflowResponse response = _azureService.CreateOrder(orderTuple.createOrderWorkItemRequest);
+            orderWorkflow = insertWorkflow(orderWorkflow);
+            updateWorkflow(orderWorkflow);
 
-            foreach (CreateSuborderWorkItemRequest createSuborderWorkItemRequest in openWorkflowRequest.ToCreateSuborderWorkItemRequests(response.Url))
+            foreach ((Workflow workflow, CreateSuborderWorkItemRequest createSuborderWorkItemRequest) suborderTuple in openWorkflowRequest.ToSuborderTuple(response.Url))
             {
-                workflow = new Workflow("Suborder", new HashSet<string> { "OrderId: 2001", "CustomerName: Jane Doe", "Priority: Low", "SubmitDate: 1/1/2025" });
-                workflow = insertWorkflow(workflow);
+                Workflow suborderWorkflow = insertWorkflow(suborderTuple.workflow);
+                suborderWorkflow = insertWorkflow(suborderWorkflow);
 
-                response = _azureService.CreateSuborder(createSuborderWorkItemRequest);
-                workflow.Update(response.Id, response.Url);
-                updateWorkflow(workflow);
+                response = _azureService.CreateSuborder(suborderTuple.createSuborderWorkItemRequest);
+                suborderWorkflow.Update(response.Id, response.Url);
+                updateWorkflow(suborderWorkflow);
             }
         }
+
+        public void UpdateWorkflow()
+        {
+            // Check if order
+            // Check 
+        }
+
+        public void CloseWorkflow(CloseWorkflowRequest closeWorkflowRequest)
+        {
+   
+        }
+
 
         private Workflow insertWorkflow(Workflow workflow)
         {
@@ -52,7 +64,7 @@ namespace learning_asp_core.Services
             return workflow;
         }
 
-        private void updateWorkflow(Workflow workflow)
+        private bool updateWorkflow(Workflow workflow)
         {
             bool exists = _appDbContext.Workflows.Any(w => w.WorkflowID == workflow.WorkflowID);
             if (exists)
@@ -65,28 +77,24 @@ namespace learning_asp_core.Services
             {
                 _logger.LogInformation("Record does not exist " + workflow.WorkflowID);
             }
+            return exists;
         }
 
-        public async void UpdateWorkflow()
+        private bool CompleteWorkflow(Workflow workflow)
         {
-            // Check if order
-            // Check 
-        }
-
-        public async void CloseWorkflow(CloseWorkflowRequest closeWorkflowRequest)
-        {
-            // Check if order and state is complete, and db entry is not already complete
-
-            // Update order db entry as completed
-
-            // Send POST to ahead api
-
-
-            var workflows = _appDbContext.Workflows.ToList();
-            foreach (var workflow in workflows)
+            bool exists = _appDbContext.Workflows.Any(w => w.WorkItemID == workflow.WorkItemID && w.IsClosed == false);
+            if (exists)
             {
-                _logger.LogInformation(workflow.WorkflowID.ToString());
+                workflow.Complete();
+                _appDbContext.Workflows.Update(workflow);
+                _appDbContext.SaveChanges();
+                _logger.LogInformation("Record updated " + workflow.WorkflowID);
             }
+            else
+            {
+                _logger.LogInformation("Record does not exist " + workflow.WorkflowID);
+            }
+            return exists;
         }
     }
 }

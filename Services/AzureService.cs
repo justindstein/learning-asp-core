@@ -32,7 +32,7 @@ namespace learning_asp_core.Services
                 .Replace("{apiVersion}", configuration["Microsoft:Azure:Api.Version"]);
         }
 
-        public CreateWorkflowResponse CreateOrder(CreateOrderWorkItemRequest createOrderWorkItemRequest)
+        public CreateWorkflowResponse CreateOrder(CreateWorkItemRequest createOrderWorkItemRequest)
         {
             HttpContent content = new StringContent(createOrderWorkItemRequest.ToRequestBody(), Encoding.UTF8, "application/json-patch+json");
             HttpResponseMessage response = _httpClient.PostAsync(_url.Replace("{workItem}", "$Order"), content)
@@ -47,7 +47,7 @@ namespace learning_asp_core.Services
             return createWorkflowResponse;
         }
 
-        public CreateWorkflowResponse CreateSuborder(CreateSuborderWorkItemRequest createSuborderWorkItemRequest)
+        public CreateWorkflowResponse CreateSuborder(CreateWorkItemRequest createSuborderWorkItemRequest)
         {
             HttpContent content = new StringContent(createSuborderWorkItemRequest.ToRequestBody(), Encoding.UTF8, "application/json-patch+json");
             HttpResponseMessage response = _httpClient.PostAsync(_url.Replace("{workItem}", "$Suborder"), content)

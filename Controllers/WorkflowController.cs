@@ -1,5 +1,6 @@
 ﻿using learning_asp_core.Models.Requests.Inbound;
 using learning_asp_core.Services;
+using learning_asp_core.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace learning_asp_core.Controllers
@@ -21,15 +22,10 @@ namespace learning_asp_core.Controllers
         [HttpPost("open")]
         public JsonResult OpenWorkflow(OpenWorkflowRequest openWorkflowRequest)
         {
-            _logger.LogInformation("Opening workflow with parameters: {@OpenWorkflowRequest}", openWorkflowRequest);
+            _logger.LogInformation("WorkflowController.OpenWorkflow [OpenWorkflowRequest: {@OpenWorkflowRequest}]", openWorkflowRequest.Dump());
 
             try 
             {
-                // write to db
-                // organize requests
-                // issue requests
-                // respond with epic link maybe
-
                 _workflowService.OpenWorkflow(openWorkflowRequest);
                 return new JsonResult(Ok());
 
@@ -42,18 +38,13 @@ namespace learning_asp_core.Controllers
         [HttpPost("close")]
         public JsonResult CloseWorkflow(CloseWorkflowRequest closeWorkflowRequest)
         {
-            _logger.LogInformation("Closing workflow with parameters: {@CloseWorkflowRequest}", closeWorkflowRequest);
+            _logger.LogInformation("WorkflowController.CloseWorkflow [CloseWorkflowRequest: {@CloseWorkflowRequest}]", closeWorkflowRequest.Dump());
 
             try
             {
-                // if order, verify all suborders are closed?
-                // update db
-                // notify callback url
-
                 _workflowService.CloseWorkflow(closeWorkflowRequest);
                 return new JsonResult(Ok());
-
-            }
+                            }
             catch (Exception e)
             {
                 return new JsonResult(StatusCodes.Status500InternalServerError);
