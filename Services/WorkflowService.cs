@@ -10,6 +10,11 @@ namespace learning_asp_core.Services
 {
     public class WorkflowService
     {
+        // TODOS:
+        // Add callback url to create workflow request
+        // Call this callback in the close workflow request
+        // when created CR workitem, call google api
+
         private readonly ILogger<WorkflowController> _logger;
         private readonly AppDbContext _appDbContext;
         private readonly AzureService _azureService;
@@ -46,17 +51,12 @@ namespace learning_asp_core.Services
             }
         }
 
-        public void UpdateWorkflow()
-        {
-            // Check if order
-            // Check 
-        }
-
         public void CloseWorkflow(CloseWorkflowRequest closeWorkflowRequest)
         {
-   
+            _logger.LogDebug("WorkflowService.CloseWorkflow [CloseWorkflowRequest: {@CloseWorkflowRequest}]", closeWorkflowRequest.Dump());
+            completeWorkflow(closeWorkflowRequest.Resource.WorkItemId);
+            // update endpoint  
         }
-
 
         private Workflow insertWorkflow(Workflow workflow)
         {
@@ -65,6 +65,26 @@ namespace learning_asp_core.Services
             _appDbContext.SaveChanges();
             _logger.LogInformation("Record inserted: " + workflow.WorkflowID);
             return workflow;
+        }
+
+        private bool completeWorkflow(int workflowId)
+        {
+            _logger.LogDebug("WorkflowService.completeWorkflow [workflowId: {@workflowId}]", workflowId);
+            Workflow? workflow = _appDbContext.Workflows.FirstOrDefault(w => w.IsClosed == true && w.WorkItemID== workflowId);
+
+            if (workflow != null)
+            {
+                workflow.Complete();
+                _appDbContext.Workflows.Update(workflow);
+                _appDbContext.SaveChanges();
+                _logger.LogDebug("WorkflowService.completeWorkflow Record completed [workflowId: {@workflowId}]", workflowId);
+            }
+            else
+            {
+                _logger.LogError("WorkflowService.completeWorkflow Record does not exist [workflowId: {@workflowId}]", workflowId);
+            }
+
+            return (workflow != null);
         }
 
         private bool updateWorkflow(Workflow workflow)
