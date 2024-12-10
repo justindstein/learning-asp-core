@@ -12,7 +12,6 @@
             OrderId = orderId;
             Description = description;
         }
-
         public abstract string ToRequestBody();
     }
 }

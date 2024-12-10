@@ -36,7 +36,7 @@ namespace learning_asp_core.Services
             (Workflow workflow, CreateWorkItemRequest createWorkItemRequest) orderTuple = openWorkflowRequest.ToOrderTuple();
             Workflow orderWorkflow = insertWorkflow(orderTuple.workflow);
 
-            CreateWorkflowResponse response = _azureService.CreateOrder(orderTuple.createWorkItemRequest);
+            CreateWorkflowResponse response = _azureService.CreateWorkItem(orderTuple.createWorkItemRequest);
             orderWorkflow.Update(response.Id, response.Url);
             updateWorkflow(orderWorkflow);
 
@@ -45,7 +45,7 @@ namespace learning_asp_core.Services
             {
                 Workflow suborderWorkflow = insertWorkflow(suborderTuple.workflow);
 
-                response = _azureService.CreateSuborder(suborderTuple.createWorkItemRequest);
+                response = _azureService.CreateWorkItem(suborderTuple.createWorkItemRequest);
                 suborderWorkflow.Update(response.Id, response.Url);
                 updateWorkflow(suborderWorkflow);
             }

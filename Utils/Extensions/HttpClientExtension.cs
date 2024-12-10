@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel;
-using System.Net.Http;
-using System.Reflection;
-using System.Text;
+﻿using System.Text;
 
 namespace learning_asp_core.Utils.Extensions
 {
@@ -12,7 +8,6 @@ namespace learning_asp_core.Utils.Extensions
         {
             string credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", credentials);
-
         }
     }
 }
