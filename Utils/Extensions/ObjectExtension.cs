@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace learning_asp_core.Utils
+namespace learning_asp_core.Utils.Extensions
 {
     public static class ObjectExtension
     {

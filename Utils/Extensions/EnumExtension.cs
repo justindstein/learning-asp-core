@@ -1,8 +1,7 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Reflection;
 
-namespace learning_asp_core.Utils
+namespace learning_asp_core.Utils.Extensions
 {
     public static class EnumExtension
     {

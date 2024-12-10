@@ -1,5 +1,5 @@
 ﻿using learning_asp_core.Models.Enums;
-using learning_asp_core.Utils;
+using learning_asp_core.Utils.Extensions;
 
 namespace learning_asp_core.Models.Requests.Outbound
 {

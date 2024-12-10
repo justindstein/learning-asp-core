@@ -1,6 +1,6 @@
 using learning_asp_core.Data;
 using learning_asp_core.Services;
-using learning_asp_core.Utils;
+using learning_asp_core.Utils.Configs;
 
 var builder = WebApplication.CreateBuilder(args);
 

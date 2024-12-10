@@ -1,7 +1,7 @@
 ﻿using learning_asp_core.Models.Entity;
 using learning_asp_core.Models.Enums;
 using learning_asp_core.Models.Requests.Outbound;
-using learning_asp_core.Utils;
+using learning_asp_core.Utils.Extensions;
 
 namespace learning_asp_core.Models.Requests.Inbound
 {
@@ -16,7 +16,7 @@ namespace learning_asp_core.Models.Requests.Inbound
         public (Workflow workflow, CreateWorkItemRequest createWorkItemRequest) ToOrderTuple()
         {
             return (
-                new Workflow(WorkItemType.Order.GetDescription(), new HashSet<string> { "OrderId: " + Order.OrderId, "CustomerName: " + Customer.CustomerName, "Priority: " + Order.Priority.GetDescription(), "SubmitDate: " + Order.SubmitDate, "ProductionDate: " + Order.SubmitDate, "BssDate: " + Order.BestStartShipDate })
+                new Workflow(WorkItemType.Order.GetDescription(),  new HashSet<string> { "OrderId: " + Order.OrderId, "CustomerName: " + Customer.CustomerName, "Priority: " + Order.Priority.GetDescription(), "SubmitDate: " + Order.SubmitDate, "ProductionDate: " + Order.SubmitDate, "BssDate: " + Order.BestStartShipDate })
                 , new CreateOrderWorkItemRequest(Customer.CustomerName, Order.OrderId, "some description", Order.Priority, Order.SubmitDate, Order.ProductionDate, Order.BestStartShipDate, Order.OrderRef)
             );
         }

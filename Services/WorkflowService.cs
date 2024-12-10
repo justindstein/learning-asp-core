@@ -4,7 +4,7 @@ using learning_asp_core.Models.Entity;
 using learning_asp_core.Models.Requests.Inbound;
 using learning_asp_core.Models.Requests.Outbound;
 using learning_asp_core.Models.Responses;
-using learning_asp_core.Utils;
+using learning_asp_core.Utils.Extensions;
 
 namespace learning_asp_core.Services
 {

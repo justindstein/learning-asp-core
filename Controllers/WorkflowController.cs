@@ -1,6 +1,6 @@
 ﻿using learning_asp_core.Models.Requests.Inbound;
 using learning_asp_core.Services;
-using learning_asp_core.Utils;
+using learning_asp_core.Utils.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace learning_asp_core.Controllers

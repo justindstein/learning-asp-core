@@ -1,6 +1,6 @@
 ﻿using learning_asp_core.Models.Enums;
 using learning_asp_core.Models.Requests.Outbound;
-using learning_asp_core.Utils;
+using learning_asp_core.Utils.Extensions;
 using System.Data.SqlClient;
 using Xunit;
 

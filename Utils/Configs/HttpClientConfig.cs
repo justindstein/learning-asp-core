@@ -1,7 +1,7 @@
 ﻿using Polly;
 using Polly.Extensions.Http;
 
-namespace learning_asp_core.Utils
+namespace learning_asp_core.Utils.Configs
 {
     public static class HttpClientConfig
     {

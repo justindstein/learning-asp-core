@@ -3,6 +3,7 @@ using learning_asp_core.Data;
 using learning_asp_core.Models.Requests.Inbound;
 using learning_asp_core.Models.Requests.Outbound;
 using learning_asp_core.Models.Responses;
+using learning_asp_core.Utils.Extensions;
 using System.Text;
 
 namespace learning_asp_core.Services
@@ -18,18 +19,14 @@ namespace learning_asp_core.Services
         {
             _logger = logger;
             _httpClient = httpClientFactory.CreateClient("retryClient");
-
-            // Retrieve credentials from configuration
-            string username = configuration["Microsoft:Azure:Username"];
-            string password = configuration["Microsoft:Azure:Password"];
-            string credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", credentials);
-
-            // Extract values from the configuration
-            _url = configuration["Microsoft:Azure:Url"]
-                .Replace("{organization}", configuration["Microsoft:Azure:Organization"])
-                .Replace("{project}", configuration["Microsoft:Azure:Project"])
-                .Replace("{apiVersion}", configuration["Microsoft:Azure:Api.Version"]);
+            _httpClient.ApplyBasicCredentials(
+                configuration["New.Wave.Group:Ahead.Sales.Platform:Username"] ?? string.Empty
+                , configuration["New.Wave.Group:Ahead.Sales.Platform:Password"] ?? string.Empty
+            );
+            _url = configuration["Microsoft:Azure:Url"] ?? string.Empty
+              .Replace("{organization}", configuration["Microsoft:Azure:Organization"]) ?? string.Empty
+              .Replace("{project}", configuration["Microsoft:Azure:Project"]) ?? string.Empty
+              .Replace("{apiVersion}", configuration["Microsoft:Azure:Api.Version"]) ?? string.Empty; 
         }
 
         public CreateWorkflowResponse CreateOrder(CreateWorkItemRequest createOrderWorkItemRequest)
