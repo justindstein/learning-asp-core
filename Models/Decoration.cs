@@ -8,9 +8,10 @@ namespace learning_asp_core.Models
 
         public LogoPlacement LogoPlacement { get; set; }
 
-        public string? decorationUrl { get; set; }
+        public string ImageUrl { get; set; }
 
-        public string? decorationNotes {  get; set; }
+        public string LogoUrl { get; set; }
 
+        public string Notes { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using learning_asp_core.Models.Enums;
+using Newtonsoft.Json;
 
 namespace learning_asp_core.Models
 {
@@ -16,10 +17,10 @@ namespace learning_asp_core.Models
 
         public PriorityType Priority { get; set; }
 
-        public HashSet<SubOrder> SubOrders { get; set; }
+        public HashSet<Suborder> Suborders { get; set; }
 
         public Order() {
-            SubOrders = new HashSet<SubOrder>();
+            Suborders = new HashSet<Suborder>();
         }
     }
 }

@@ -18,8 +18,9 @@
             [
                 {{'op':'add','path':'/fields/System.Title','from':null,'value':'{base.CustomerName} - {base.OrderId}'}},
                 {{'op':'add','path':'/relations/-','value':{{'rel':'System.LinkTypes.Hierarchy-Reverse','url':'{_parentRef}'}}}},
-                {{'op':'add','path':'/fields/System.Description','from':null,'value':'{base.Description}'}}
+                {{'op':'add','path':'/fields/System.Description','from':null,'value':""{base.Description}""}}
             ]";
+            // {{'op':'add','path':'/fields/System.Description','from':null,'value':'{base.Description}'}}
         }
     }
 }

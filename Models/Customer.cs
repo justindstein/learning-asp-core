@@ -7,11 +7,5 @@
         public string CustomerName { get; set; }
 
         public Customer() { }
-
-        public Customer(int customerId, string customerName)
-        {
-            CustomerId = customerId;
-            CustomerName = customerName;
-        }
     }
 }
