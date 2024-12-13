@@ -4,9 +4,9 @@ namespace learning_asp_core.Models.Entity
 {
     public class Workflow
     {
-        public int WorkflowID { get; set; }
+        public int WorkflowId { get; set; }
         
-        public int WorkItemID { get; set; }
+        public int WorkItemId { get; set; }
         
         public string WorkItemUrl { get; set; }
         
@@ -24,9 +24,9 @@ namespace learning_asp_core.Models.Entity
             Data = JsonSerializer.Serialize(data);
         }
 
-        public void Update(int workItemID, string workItemUrl)
+        public void Update(int workItemId, string workItemUrl)
         {
-            WorkItemID = workItemID;
+            WorkItemId = workItemId;
             WorkItemUrl = workItemUrl;
         }
 

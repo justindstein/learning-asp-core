@@ -22,7 +22,7 @@ namespace learning_asp_core.Controllers
         [HttpPost("open")]
         public JsonResult OpenWorkflow(OpenWorkflowRequest openWorkflowRequest)
         {
-            _logger.LogInformation("WorkflowController.OpenWorkflow [OpenWorkflowRequest: {@OpenWorkflowRequest}]", openWorkflowRequest.Dump());
+            _logger.LogInformation("WorkflowController.OpenWorkflow [openWorkflowRequest: {@openWorkflowRequest}]", openWorkflowRequest);
 
             try 
             {
@@ -31,7 +31,7 @@ namespace learning_asp_core.Controllers
 
             } catch(Exception e)
             {
-                _logger.LogError("WorkflowController.OpenWorkflow [Exception: {@e}]", e.Dump());
+                _logger.LogError("WorkflowController.OpenWorkflow [e: {@e}]", e);
                 return new JsonResult(StatusCodes.Status500InternalServerError);
             }
         }
@@ -39,7 +39,7 @@ namespace learning_asp_core.Controllers
         [HttpPost("close")]
         public JsonResult CloseWorkflow(CloseWorkflowRequest closeWorkflowRequest)
         {
-            _logger.LogInformation("WorkflowController.CloseWorkflow [CloseWorkflowRequest: {@CloseWorkflowRequest}]", closeWorkflowRequest.Dump());
+            _logger.LogInformation("WorkflowController.CloseWorkflow [closeWorkflowRequest: {@closeWorkflowRequest}]", closeWorkflowRequest);
 
             try
             {
@@ -48,7 +48,7 @@ namespace learning_asp_core.Controllers
                             }
             catch (Exception e)
             {
-                _logger.LogError("WorkflowController.CloseWorkflow [Exception: {@e}]", e.Dump());
+                _logger.LogError("WorkflowController.CloseWorkflow [e: {@e}]", e);
                 return new JsonResult(StatusCodes.Status500InternalServerError);
             }
         }

@@ -32,7 +32,7 @@ namespace learning_asp_core.Services
 
         public void OpenWorkflow(OpenWorkflowRequest openWorkflowRequest)
         {
-            _logger.LogDebug("WorkflowService.OpenWorkflow [OpenWorkflowRequest: {@OpenWorkflowRequest}]", openWorkflowRequest.Dump());
+            _logger.LogInformation("WorkflowService.OpenWorkflow [openWorkflowRequest: {@openWorkflowRequest}]", openWorkflowRequest);
             (Workflow workflow, CreateWorkItemRequest createWorkItemRequest) orderTuple = openWorkflowRequest.ToOrderTuple();
             Workflow orderWorkflow = insertWorkflow(orderTuple.workflow);
 
@@ -40,7 +40,6 @@ namespace learning_asp_core.Services
             orderWorkflow.Update(response.Id, response.Url);
             updateWorkflow(orderWorkflow);
 
-            _logger.LogDebug("foreach");
             foreach ((Workflow workflow, CreateWorkItemRequest createWorkItemRequest) suborderTuple in openWorkflowRequest.ToSuborderTuple(response.Url))
             {
                 Workflow suborderWorkflow = insertWorkflow(suborderTuple.workflow);
@@ -53,24 +52,24 @@ namespace learning_asp_core.Services
 
         public void CloseWorkflow(CloseWorkflowRequest closeWorkflowRequest)
         {
-            _logger.LogDebug("WorkflowService.CloseWorkflow [CloseWorkflowRequest: {@CloseWorkflowRequest}]", closeWorkflowRequest.Dump());
+            _logger.LogInformation("WorkflowService.CloseWorkflow [closeWorkflowRequest: {@closeWorkflowRequest}]", closeWorkflowRequest);
             completeWorkflow(closeWorkflowRequest.Resource.WorkItemId);
             // update endpoint  
         }
 
         private Workflow insertWorkflow(Workflow workflow)
         {
-            _logger.LogDebug("WorkflowService.insertWorkflow [Workflow: {@workflow}]", workflow.Dump());
+            _logger.LogInformation("WorkflowService.insertWorkflow [workflow: {@workflow}]", workflow);
             _appDbContext.Workflows.Add(workflow);
             _appDbContext.SaveChanges();
-            _logger.LogInformation("Record inserted: " + workflow.WorkflowID);
+            _logger.LogInformation("Record inserted: " + workflow.WorkflowId);
             return workflow;
         }
 
         private bool completeWorkflow(int workflowId)
         {
-            _logger.LogDebug("WorkflowService.completeWorkflow [workflowId: {@workflowId}]", workflowId);
-            Workflow? workflow = _appDbContext.Workflows.FirstOrDefault(w => w.IsClosed == true && w.WorkItemID== workflowId);
+            _logger.LogInformation("WorkflowService.completeWorkflow [workflowId: {@workflowId}]", workflowId);
+            Workflow? workflow = _appDbContext.Workflows.FirstOrDefault(w => w.IsClosed == true && w.WorkItemId == workflowId);
 
             if (workflow != null)
             {
@@ -89,35 +88,35 @@ namespace learning_asp_core.Services
 
         private bool updateWorkflow(Workflow workflow)
         {
-            _logger.LogDebug("WorkflowService.updateWorkflow [Workflow: {@workflow}]", workflow.Dump());
-            bool exists = _appDbContext.Workflows.Any(w => w.WorkflowID == workflow.WorkflowID);
+            _logger.LogInformation("WorkflowService.updateWorkflow [workflow: {@workflow}]", workflow);
+            bool exists = _appDbContext.Workflows.Any(w => w.WorkflowId == workflow.WorkflowId);
             if (exists)
             {
                 _appDbContext.Workflows.Update(workflow);
                 _appDbContext.SaveChanges();
-                _logger.LogDebug("WorkflowService.updateWorkflow Record updated [WorkflowID: {@WorkflowID}]", workflow.WorkflowID);
+                _logger.LogDebug("WorkflowService.updateWorkflow Record updated [WorkflowId: {@WorkflowId}]", workflow.WorkflowId);
             }
             else
             {
-                _logger.LogError("WorkflowService.updateWorkflow Record does not exist [WorkflowID: {@WorkflowID}]", workflow.WorkflowID);
+                _logger.LogError("WorkflowService.updateWorkflow Record does not exist [WorkflowID: {@WorkflowID}]", workflow.WorkflowId);
             }
             return exists;
         }
 
         private bool completeWorkflow(Workflow workflow)
         {
-            _logger.LogDebug("WorkflowService.completeWorkflow [Workflow: {@workflow}]", workflow.Dump());
-            bool exists = _appDbContext.Workflows.Any(w => w.WorkItemID == workflow.WorkItemID && w.IsClosed == false);
+            _logger.LogInformation("WorkflowService.completeWorkflow [Workflow: {@workflow}]", workflow.Dump());
+            bool exists = _appDbContext.Workflows.Any(w => w.WorkItemId == workflow.WorkItemId && w.IsClosed == false);
             if (exists)
             {
                 workflow.Complete();
                 _appDbContext.Workflows.Update(workflow);
                 _appDbContext.SaveChanges();
-                _logger.LogDebug("WorkflowService.completeWorkflow Record updated [Workflow: {@workflow}]", workflow.Dump());
+                _logger.LogDebug("WorkflowService.completeWorkflow Record updated [workflow: {@workflow}]", workflow);
             }
             else
             {
-                _logger.LogError("WorkflowService.updateWorkflow Record does not exist [WorkflowID: {@WorkflowID}]", workflow.WorkflowID);
+                _logger.LogError("WorkflowService.updateWorkflow Record does not exist [WorkflowId: {@WorkflowId}]", workflow.WorkflowId);
             }
             return exists;
         }

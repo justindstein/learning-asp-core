@@ -17,6 +17,8 @@ namespace learning_asp_core.Services
         private readonly string _orderUrl;
         private readonly string _suborderUrl;
 
+        private readonly Dictionary<Type, string> urls = new Dictionary<Type, string>();
+
         public AzureService(ILogger<WorkflowController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _logger = logger;
@@ -26,17 +28,25 @@ namespace learning_asp_core.Services
                 , (configuration["Microsoft:Azure:Password"] ?? string.Empty)
             );
 
-            _orderUrl = (configuration["Microsoft:Azure:Url"] ?? string.Empty)
-              .Replace("{organization}", configuration["Microsoft:Azure:Organization"] ?? string.Empty)
-              .Replace("{project}", configuration["Microsoft:Azure:Project"] ?? string.Empty)
-              .Replace("{apiVersion}", configuration["Microsoft:Azure:Api.Version"] ?? string.Empty)
-              .Replace("{workItem}", "$Order");
+            // Add 'CreateOrderWorkItemRequest' url
+            urls.Add(
+                typeof(CreateOrderWorkItemRequest)
+                , (configuration["Microsoft:Azure:Url"] ?? string.Empty)
+                  .Replace("{organization}", configuration["Microsoft:Azure:Organization"] ?? string.Empty)
+                  .Replace("{project}", configuration["Microsoft:Azure:Project"] ?? string.Empty)
+                  .Replace("{apiVersion}", configuration["Microsoft:Azure:Api.Version"] ?? string.Empty)
+                  .Replace("{workItem}", "$Order")
+            );
 
-            _suborderUrl = (configuration["Microsoft:Azure:Url"] ?? string.Empty)
-              .Replace("{organization}", configuration["Microsoft:Azure:Organization"] ?? string.Empty)
-              .Replace("{project}", configuration["Microsoft:Azure:Project"] ?? string.Empty)
-              .Replace("{apiVersion}", configuration["Microsoft:Azure:Api.Version"] ?? string.Empty)
-              .Replace("{workItem}", "$Suborder");
+            // Add 'CreateSuborderWorkItemRequest' url
+            urls.Add(
+                typeof(CreateSuborderWorkItemRequest)
+                , (configuration["Microsoft:Azure:Url"] ?? string.Empty)
+                  .Replace("{organization}", configuration["Microsoft:Azure:Organization"] ?? string.Empty)
+                  .Replace("{project}", configuration["Microsoft:Azure:Project"] ?? string.Empty)
+                  .Replace("{apiVersion}", configuration["Microsoft:Azure:Api.Version"] ?? string.Empty)
+                  .Replace("{workItem}", "$Suborder")
+            );
         }
 
         public CreateWorkflowResponse CreateWorkItem(CreateWorkItemRequest createOrderWorkItemRequest)
@@ -45,11 +55,16 @@ namespace learning_asp_core.Services
 
             string unencodedBody = createOrderWorkItemRequest.ToRequestBody();
             HttpContent encodedBody = new StringContent(unencodedBody, Encoding.UTF8, APPLICATION_JSON_PATCH_JSON);
-            string url = (createOrderWorkItemRequest is CreateOrderWorkItemRequest) ? _orderUrl : _suborderUrl;
-            HttpResponseMessage response = _httpClient.PostAsync(url, encodedBody).GetAwaiter().GetResult();
+
+            String url = urls[createOrderWorkItemRequest.GetType()];
+            HttpResponseMessage response = _httpClient.PostAsync(url, encodedBody)
+                .GetAwaiter()
+                .GetResult();
 
             string responseBody = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            CreateWorkflowResponse createWorkflowResponse = JsonSerializer.Deserialize<CreateWorkflowResponse>(responseBody, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            CreateWorkflowResponse createWorkflowResponse = JsonSerializer.Deserialize<CreateWorkflowResponse>(responseBody, new JsonSerializerOptions { 
+                PropertyNameCaseInsensitive = true 
+            });
             _logger.LogInformation("AzureService.CreateWorkflowResponse [Status Code: {StatusCode}] [Url: {Url}] [Response Body: {ResponseBody}]", response.StatusCode, url, responseBody);
 
             return createWorkflowResponse;
