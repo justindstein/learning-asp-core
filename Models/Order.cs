@@ -1,5 +1,4 @@
 ﻿using learning_asp_core.Models.Enums;
-using Newtonsoft.Json;
 
 namespace learning_asp_core.Models
 {

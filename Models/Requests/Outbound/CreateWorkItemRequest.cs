@@ -4,13 +4,11 @@
     {
         protected readonly string CustomerName;
         protected readonly string OrderId;
-        protected readonly string Description;
 
-        public CreateWorkItemRequest(string customerName, string orderId, string description)
+        public CreateWorkItemRequest(string customerName, string orderId)
         {
             CustomerName = customerName;
             OrderId = orderId;
-            Description = description;
         }
         public abstract string ToRequestBody();
     }

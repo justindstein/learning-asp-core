@@ -11,8 +11,8 @@ namespace learning_asp_core.Models.Requests.Outbound
         private readonly DateTime _bssDate;
         private readonly string _orderRef;
 
-        public CreateOrderWorkItemRequest(string customerName, string orderId, string description, PriorityType priority, DateTime submitDate, DateTime productionDate, DateTime bssDate, string orderRef) 
-            : base(customerName, orderId, description)
+        public CreateOrderWorkItemRequest(string customerName, string orderId, PriorityType priority, DateTime submitDate, DateTime productionDate, DateTime bssDate, string orderRef) 
+            : base(customerName, orderId)
         {
             _priority = priority;
             _submitDate = submitDate;
@@ -26,7 +26,6 @@ namespace learning_asp_core.Models.Requests.Outbound
             return $@"
             [
                 {{'op':'add','path':'/fields/System.Title','value':'{base.CustomerName} - {base.OrderId}'}},
-                {{'op':'add','path':'/fields/System.Description','value':'{base.Description}'}},
                 {{'op':'add','path':'/fields/Custom.Customer','value':'{base.CustomerName}'}},
                 {{'op':'add','path':'/fields/Custom.WorkPriority','value':'{_priority.GetDescription()}'}},
                 {{'op':'add','path':'/fields/Custom.SubmitDate','value':'{_submitDate}'}},

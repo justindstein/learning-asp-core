@@ -69,7 +69,7 @@ namespace learning_asp_core.Services
         private bool completeWorkflow(int workflowId)
         {
             _logger.LogInformation("WorkflowService.completeWorkflow [workflowId: {@workflowId}]", workflowId);
-            Workflow? workflow = _appDbContext.Workflows.FirstOrDefault(w => w.IsClosed == true && w.WorkItemId == workflowId);
+            Workflow? workflow = _appDbContext.Workflows.FirstOrDefault(w => w.IsClosed == false && w.WorkItemType == "Order" && w.WorkItemId == workflowId);
 
             if (workflow != null)
             {
@@ -80,7 +80,7 @@ namespace learning_asp_core.Services
             }
             else
             {
-                _logger.LogError("WorkflowService.completeWorkflow Record does not exist [workflowId: {@workflowId}]", workflowId);
+                throw new Exception("WorkflowService.completeWorkflow Record does not exist [workflowId: {@workflowId}]");
             }
 
             return (workflow != null);

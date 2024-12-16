@@ -20,7 +20,7 @@ namespace learning_asp_core.Tests.Models.Outbound
             DateTime productionDate = new DateTime(2024, 12, 3);
             DateTime bssDate = new DateTime(2024, 12, 3);
             string orderRef = "testOrderRef";
-            CreateOrderWorkItemRequest createOrderWorkItemRequest = new CreateOrderWorkItemRequest(customerName, orderId, description, priority, submitDate, productionDate, bssDate, orderRef);
+            CreateOrderWorkItemRequest createOrderWorkItemRequest = new CreateOrderWorkItemRequest(customerName, orderId, priority, submitDate, productionDate, bssDate, orderRef);
 
             // Act
             String expected = $@"
