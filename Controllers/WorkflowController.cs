@@ -31,7 +31,7 @@ namespace learning_asp_core.Controllers
             } catch(Exception e)
             {
                 _logger.LogError("WorkflowController.OpenWorkflow [e: {@e}]", e);
-                return new JsonResult(StatusCodes.Status500InternalServerError);
+                return new JsonResult(e, StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -48,7 +48,7 @@ namespace learning_asp_core.Controllers
             catch (Exception e)
             {
                 _logger.LogError("WorkflowController.CloseWorkflow [e: {@e}]", e);
-                return new JsonResult(StatusCodes.Status500InternalServerError);
+                return new JsonResult(e, StatusCodes.Status500InternalServerError);
             }
         }
     }

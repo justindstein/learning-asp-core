@@ -7,20 +7,20 @@ using learning_asp_core.Utils.Extensions;
 
 namespace learning_asp_core.Services
 {
-    public class WorkflowService
+    public class ApprovalService
     {
         // TODOS:
         // Add callback url to create workflow request
         // Call this callback in the close workflow request
         // when created CR workitem, call google api
 
-        private readonly ILogger<WorkflowService> _logger;
+        private readonly ILogger<ApprovalService> _logger;
         private readonly AppDbContext _appDbContext;
         private readonly AzureService _azureService;
         private readonly AheadService _aheadService;
         private readonly GoogleService _googleService;
 
-        public WorkflowService(ILogger<WorkflowService> logger, AppDbContext appDbContext, AzureService azureService, AheadService aheadService, GoogleService googleService)
+        public ApprovalService(ILogger<ApprovalService> logger, AppDbContext appDbContext, AzureService azureService, AheadService aheadService, GoogleService googleService)
         {
             _logger = logger;
             _appDbContext = appDbContext;
@@ -52,8 +52,8 @@ namespace learning_asp_core.Services
         public void CloseWorkflow(CloseWorkflowRequest closeWorkflowRequest)
         {
             _logger.LogInformation("WorkflowService.CloseWorkflow [closeWorkflowRequest: {@closeWorkflowRequest}]", closeWorkflowRequest);
-            Workflow workflow = completeWorkflow(closeWorkflowRequest.Resource.WorkItemId);
-            _aheadService.OrderComplete(new OrderCompletedRequest(workflow));
+            completeWorkflow(closeWorkflowRequest.Resource.WorkItemId);
+            // update endpoint  
         }
 
         private Workflow insertWorkflow(Workflow workflow)
@@ -65,7 +65,7 @@ namespace learning_asp_core.Services
             return workflow;
         }
 
-        private Workflow completeWorkflow(int workflowId)
+        private bool completeWorkflow(int workflowId)
         {
             _logger.LogInformation("WorkflowService.completeWorkflow [workflowId: {@workflowId}]", workflowId);
             Workflow? workflow = _appDbContext.Workflows.FirstOrDefault(w => w.IsClosed == false && w.WorkItemType == "Order" && w.WorkItemId == workflowId);
@@ -76,12 +76,13 @@ namespace learning_asp_core.Services
                 _appDbContext.Workflows.Update(workflow);
                 _appDbContext.SaveChanges();
                 _logger.LogDebug("WorkflowService.completeWorkflow Record completed [workflowId: {@workflowId}]", workflowId);
-                return workflow;
             }
             else
             {
                 throw new Exception("WorkflowService.completeWorkflow Record does not exist [workflowId: {@workflowId}]");
             }
+
+            return (workflow != null);
         }
 
         private bool updateWorkflow(Workflow workflow)

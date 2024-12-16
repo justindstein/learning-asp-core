@@ -1,5 +1,4 @@
-﻿using learning_asp_core.Controllers;
-using learning_asp_core.Models.Requests.Outbound;
+﻿using learning_asp_core.Models.Requests.Outbound;
 using learning_asp_core.Models.Responses;
 using learning_asp_core.Utils.Extensions;
 using System.Text;
@@ -11,7 +10,7 @@ namespace learning_asp_core.Services
     {
         private static readonly string APPLICATION_JSON_PATCH_JSON = "application/json-patch+json";
 
-        private readonly ILogger<WorkflowController> _logger;
+        private readonly ILogger<AzureService> _logger;
         private readonly HttpClient _httpClient;
 
         private readonly string _orderUrl;
@@ -19,7 +18,7 @@ namespace learning_asp_core.Services
 
         private readonly Dictionary<Type, string> urls = new Dictionary<Type, string>();
 
-        public AzureService(ILogger<WorkflowController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public AzureService(ILogger<AzureService> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _logger = logger;
             _httpClient = httpClientFactory.CreateClient("retryClient");

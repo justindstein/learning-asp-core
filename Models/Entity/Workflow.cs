@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using learning_asp_core.Models.Requests.Outbound;
+using System.Text.Json;
 
 namespace learning_asp_core.Models.Entity
 {

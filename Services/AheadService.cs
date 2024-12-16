@@ -7,12 +7,12 @@ namespace learning_asp_core.Services
 {
     public class AheadService
     {
-        private readonly ILogger<WorkflowController> _logger;
+        private readonly ILogger<AheadService> _logger;
         private readonly HttpClient _httpClient;
 
         private readonly string _url;
 
-        public AheadService(ILogger<WorkflowController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public AheadService(ILogger<AheadService> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _logger = logger;
             _httpClient = httpClientFactory.CreateClient();
