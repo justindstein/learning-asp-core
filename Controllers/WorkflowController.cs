@@ -29,7 +29,8 @@ namespace learning_asp_core.Controllers
                 _workflowService.OpenWorkflow(openWorkflowRequest);
                 return new JsonResult(Ok());
 
-            } catch(Exception e)
+            } 
+            catch(Exception e)
             {
                 _logger.LogError("WorkflowController.OpenWorkflow [e: {@e}]", e);
                 return new JsonResult(e, StatusCodes.Status500InternalServerError);

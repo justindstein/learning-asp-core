@@ -4,6 +4,22 @@ using learning_asp_core.Utils.Configs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+////
+//// Configure the web host to listen on specific ports
+//builder.WebHost.ConfigureKestrel(serverOptions =>
+//{
+//    // Configure the HTTP port (non-SSL)
+//    serverOptions.ListenAnyIP(8080);
+
+//    // Configure the HTTPS port (SSL)
+//    serverOptions.ListenAnyIP(8081, listenOptions =>
+//    {
+//        listenOptions.UseHttps();
+//    });
+//});
+////
+
+
 // Configucre database.
 // todo
 
@@ -16,6 +32,7 @@ builder.Services.AddScoped<AppDbContext>();
 builder.Services.AddScoped<WorkflowService>();
 builder.Services.AddScoped<AzureService>();
 builder.Services.AddScoped<AheadService>();
+builder.Services.AddScoped<ApprovalService>();
 builder.Services.AddScoped<GoogleService>();
 
 builder.Services.AddControllers();

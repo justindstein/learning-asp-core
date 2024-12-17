@@ -21,7 +21,17 @@ namespace learning_asp_core.Controllers
         [HttpPost("create")]
         public JsonResult CreateApproval()
         {
-            return new JsonResult(Ok());
+            try
+            {
+                _approvalService.CreateApproval();
+                return new JsonResult(Ok());
+            } 
+            catch (Exception e)
+            {
+                _logger.LogError("ApprovalController.CreateApproval [e: {@e}]", e);
+                return new JsonResult(e, StatusCodes.Status500InternalServerError);
+            }
+
         }
 
         [HttpPost("update")]
