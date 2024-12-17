@@ -52,7 +52,7 @@ namespace learning_asp_core.Services
         public void CloseWorkflow(CloseWorkflowRequest closeWorkflowRequest)
         {
             _logger.LogInformation("WorkflowService.CloseWorkflow [closeWorkflowRequest: {@closeWorkflowRequest}]", closeWorkflowRequest);
-            completeWorkflow(closeWorkflowRequest.Resource.WorkItemId);
+            completeWorkflow(closeWorkflowRequest.WorkItemId);
             // update endpoint  
         }
 
