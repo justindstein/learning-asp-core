@@ -35,5 +35,17 @@ namespace learning_asp_core.Controllers
         //{
         //    return new JsonResult(Ok());
         //}
+
+        [HttpPost("create/azure")]
+        public JsonResult AzureCreateApproval()
+        {
+            return new JsonResult(Ok());
+        }
+
+        [HttpPost("update/azure")]
+        public JsonResult AzureUpdateApproval()
+        {
+            return new JsonResult(Ok());
+        }
     }
 }

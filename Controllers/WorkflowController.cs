@@ -1,4 +1,5 @@
 ﻿using learning_asp_core.Models.Requests.Inbound;
+using learning_asp_core.Models.Requests.Inbound.Azure;
 using learning_asp_core.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,10 +45,27 @@ namespace learning_asp_core.Controllers
             {
                 _workflowService.CloseWorkflow(closeWorkflowRequest);
                 return new JsonResult(Ok());
-                            }
+            }
             catch (Exception e)
             {
                 _logger.LogError("WorkflowController.CloseWorkflow [e: {@e}]", e);
+                return new JsonResult(e, StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost("close/azure")]
+        public JsonResult AzureCloseWorkflow(AzureCloseWorkflowRequest azureCloseWorkflowRequest)
+        {
+            _logger.LogInformation("WorkflowController.AzureCloseWorkflow [azureCloseWorkflowRequest: {@azureCloseWorkflowRequest}]", azureCloseWorkflowRequest);
+
+            try
+            {
+                _workflowService.CloseWorkflow(azureCloseWorkflowRequest.ToCloseWorkflowRequest());
+                return new JsonResult(Ok());
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("WorkflowController.AzureCloseWorkflow [e: {@e}]", e);
                 return new JsonResult(e, StatusCodes.Status500InternalServerError);
             }
         }
